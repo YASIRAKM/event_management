@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:eventmanagement/constants/color_constants.dart';
 import 'package:eventmanagement/constants/text_style_constant.dart';
-import 'package:eventmanagement/user/controller/bool_controller.dart';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -31,7 +31,7 @@ class UsereventSelect extends StatelessWidget {
       body: StreamBuilder(
           stream: FirebaseFirestore.instance.collection("Event").snapshots(),
           builder: (context, snapshot) {
-            return Consumer2<EventController, ValueChanger>(
+            return Consumer2<EventController, UserBasicController>(
               builder: (context, eventController, valueChanger, _) {
                 if (eventController.events.isEmpty) {
                   eventController.fetchEvents();
@@ -39,8 +39,8 @@ class UsereventSelect extends StatelessWidget {
                     child:CircularProgressIndicator(),
                   );
                 } else {
-                  final image =
-                      eventController.events[valueChanger.current].imageUrl[0];
+                  final image =snapshot.data!.docs[valueChanger.current]["URLlist"][0];
+                      // eventController.events[valueChanger.current].imageUrl[0];
 
                   return Stack(
                     children: [
@@ -56,9 +56,10 @@ class UsereventSelect extends StatelessWidget {
                       Padding(
                         padding: EdgeInsets.only(top: ht * .375),
                         child: CarouselSlider.builder(
-                          itemCount: eventController.events.length,
+                          itemCount: snapshot.data!.docs.length,
                           itemBuilder: (context, index, realIndex) {
-                            final event = eventController.events[index];
+                            final event = snapshot.data!.docs[index];
+                            var imageList = event["URLlist"];
                             return InkWell(
                               onTap: () {
                                 Navigator.push(
@@ -67,7 +68,7 @@ class UsereventSelect extends StatelessWidget {
                                         builder: (_) => ServiceSelect(
                                               uid:
                                                   snapshot.data!.docs[index].id,
-                                              title: event.title,
+                                              title: event["Title"],
                                             )));
                               },
                               child: Container(
@@ -91,7 +92,7 @@ class UsereventSelect extends StatelessWidget {
                                     child: Wrap(
                                       children: [
                                         CarouselSlider.builder(
-                                            itemCount: event.imageUrl.length,
+                                            itemCount: imageList.length,
                                             itemBuilder:
                                                 (context, index, realIndex) {
                                               return Image(
@@ -99,7 +100,7 @@ class UsereventSelect extends StatelessWidget {
                                                   height: ht * .3,
                                                   width: wt * .5,
                                                   image: NetworkImage(
-                                                      event.imageUrl[index]));
+                                                      imageList[index]));
                                             },
                                             options: CarouselOptions(
                                                 height: ht * .3,
@@ -136,7 +137,7 @@ class UsereventSelect extends StatelessWidget {
                                                 child: Wrap(
                                                   children: [
                                                     NewRowICOnTxtWidget(
-                                                      txt: event.title,
+                                                      txt: event["Title"],
                                                       ics: Icons.event,
                                                       clr: MyColorConst()
                                                           .userAppbargradient3,
@@ -149,7 +150,7 @@ class UsereventSelect extends StatelessWidget {
                                                       height: ht * .05,
                                                     ),
                                                     NewRowICOnTxtWidget(
-                                                        txt: event.price,
+                                                        txt: event["price"],
                                                         ics: Icons
                                                             .currency_rupee_sharp,
                                                         clr: MyColorConst()
@@ -162,7 +163,7 @@ class UsereventSelect extends StatelessWidget {
                                                       height: ht * .05,
                                                     ),
                                                     NewRowICOnTxtWidget(
-                                                        txt: event.description,
+                                                        txt: event["Description"],
                                                         ics: Icons.description,
                                                         clr: MyColorConst()
                                                             .userAppbargradient3,
@@ -189,7 +190,7 @@ class UsereventSelect extends StatelessWidget {
                                 valueChanger.updateCurrent(index);
                               },
                               viewportFraction: .8,
-                              height: 450,
+                              height: ht*.6,
                               enlargeStrategy: CenterPageEnlargeStrategy.height,
                               pauseAutoPlayOnTouch: true,
                               animateToClosest: true,

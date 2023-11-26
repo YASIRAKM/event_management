@@ -9,17 +9,16 @@ import 'package:eventmanagement/user/controller/servie_select_controller.dart';
 import 'package:eventmanagement/user/controller/userid_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:intl/intl.dart';
-import 'package:lottie/lottie.dart';
+
 import 'package:provider/provider.dart';
 import 'checkout_page.dart';
 
 class ServiceSelectUser extends StatelessWidget {
-  final String Uid;
+  final String uid;
 
   final List serv;
 
-  ServiceSelectUser({super.key, required this.Uid, required this.serv});
+  ServiceSelectUser({super.key, required this.uid, required this.serv});
 
   final GlobalKey<FormState> formK = GlobalKey<FormState>();
   final TextEditingController suggestController = TextEditingController();
@@ -30,13 +29,13 @@ class ServiceSelectUser extends StatelessWidget {
   Widget build(BuildContext context) {
     final ht = MediaQuery.sizeOf(context).height;
     final wt = MediaQuery.sizeOf(context).width;
+    Map<String, dynamic> mapData = {};
     return Scaffold(
       backgroundColor: MyColorConst().backgroundColor,
       extendBodyBehindAppBar: false,
-      appBar: CommonAppBarUser(
+      appBar: const CommonAppBarUser(
         title1: 'Confirm Order',
         clr: true,
-        onPress: () {},
       ),
       body: Consumer2<ServiceSelectController, UserIdController>(
         builder: (BuildContext context, serviceSelect, userIdController,
@@ -53,8 +52,13 @@ class ServiceSelectUser extends StatelessWidget {
                 // crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   StreamBuilder(
-                    stream: serviceSelect.fetchEventData(Uid).asStream(),
+                    stream: FirebaseFirestore.instance
+                        .collection("Event")
+                        .doc(uid)
+                        .snapshots(),
                     builder: (context, snapshot) {
+                      mapData = snapshot.data!.data() as Map<String, dynamic>;
+
                       return Padding(
                         padding: EdgeInsets.only(left: wt * .01),
                         child: Column(
@@ -69,7 +73,7 @@ class ServiceSelectUser extends StatelessWidget {
                                   NewRowICOnTxtWidget(
                                     w: wt,
                                     ics: Icons.event,
-                                    txt: serviceSelect.mapData!["Title"],
+                                    txt: snapshot.data!["Title"],
                                     clr: MyColorConst().cardTXT,
                                     txtstl: MyTextStyle().imgetitle,
                                     h: ht * .05,
@@ -78,7 +82,7 @@ class ServiceSelectUser extends StatelessWidget {
                                       w: wt,
                                       h: ht * .05,
                                       ics: FontAwesomeIcons.indianRupeeSign,
-                                      txt: serviceSelect.mapData!["price"],
+                                      txt: snapshot.data!["price"],
                                       clr: MyColorConst().cardTXT,
                                       txtstl: MyTextStyle().imgetitle),
                                 ],
@@ -136,15 +140,16 @@ class ServiceSelectUser extends StatelessWidget {
                                       );
                                     },
                                     options: CarouselOptions(
-                                        height: ht * .15,autoPlayAnimationDuration: const Duration(seconds: 2),
+                                        height: ht * .15,
+                                        autoPlayAnimationDuration:
+                                            const Duration(seconds: 2),
                                         enlargeStrategy:
                                             CenterPageEnlargeStrategy.height,
                                         autoPlay:
                                             serv.length == 1 ? false : true,
                                         viewportFraction: .7,
                                         aspectRatio: .2,
-                                        enlargeFactor: .5))
-                                ),
+                                        enlargeFactor: .5))),
                           ),
                           Padding(
                             padding: EdgeInsets.only(left: wt * .03),
@@ -175,8 +180,7 @@ class ServiceSelectUser extends StatelessWidget {
                                             serviceSelect.dateController,
                                         decoration: InputDecoration(
                                             labelText: serviceSelect
-                                                        .dateController.text !=
-                                                    null
+                                                    .dateController.text.isEmpty
                                                 ? "Pick your date"
                                                 : serviceSelect
                                                     .dateController.text,
@@ -236,28 +240,32 @@ class ServiceSelectUser extends StatelessWidget {
                                 r3: 25,
                                 r4: 25,
                                 onpressed: () async {
+                                  final navigator = Navigator.of(context);
+                                  userIdController.getSharedValue();
+                                  serviceSelect.calculateTotal(
+                                      mapData, serviceSelect.chkBox2);
+
                                   final db = await FirebaseFirestore.instance
                                       .collection("Booking")
                                       .add({
                                     "date": serviceSelect.dateController.text,
-                                    "event": serviceSelect.mapData,
+                                    "event": mapData,
                                     "services": serviceSelect.chkBox2,
-                                    "userid": userIdController
-                                        .getSharedValue("userid"),
+                                    "Total": serviceSelect.total.toString(),
+                                    "userid": userIdController.id.toString(),
                                     "Place": serviceSelect.placeController.text,
                                     "Suggest": suggestController.text
                                   });
-
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (_) => CheckOutView(
-                                                docId: db.id,
-                                                checkout: true,
-                                              )));
-                                }
-                                // },
-                                ,
+                                  navigator.push(MaterialPageRoute(
+                                      builder: (_) => CheckOutView(
+                                            docId: db.id,
+                                            checkout: true,
+                                          )));
+                                  serviceSelect.dateController.clear();
+                                  serviceSelect.placeController.clear();
+                                  suggestController.clear();
+                                  serviceSelect.chkBox2.clear();
+                                },
                                 bColor: MyColorConst.color1,
                                 txt: 'Confirm',
                                 txtstyle: MyTextStyle().txtstyle1),

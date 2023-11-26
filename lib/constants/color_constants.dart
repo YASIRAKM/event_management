@@ -15,7 +15,10 @@ class MyColorConst{
   final Color userAppbargradient1=CupertinoColors.link.elevatedColor;
   final Color userAppbargradient2 =CupertinoColors.inactiveGray;
   final Color userAppbargradient3 =CupertinoColors.systemPurple;
-  final Color Card1 =Colors.yellow.shade50;
+  final Color card1 =Colors.yellow.shade50;
+  final Color card2 =CupertinoColors.systemBackground;
   final Color cardelev1=  CupertinoColors.systemMint.withAlpha(25);
   final Color cardTXT= CupertinoColors.black.withGreen(100);
+  final Color ratingColor= CupertinoColors.systemYellow.darkElevatedColor;
+  final Color unRatedColor= CupertinoColors.secondaryLabel;
 }

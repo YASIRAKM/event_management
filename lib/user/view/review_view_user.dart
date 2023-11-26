@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eventmanagement/constants/color_constants.dart';
+import 'package:eventmanagement/utils/common_appbar_user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:lottie/lottie.dart';
@@ -12,7 +14,9 @@ class RevViewUser extends StatelessWidget {
   Widget build(BuildContext context) {
     final ht = MediaQuery.sizeOf(context).height;
     final wt = MediaQuery.sizeOf(context).width;
-    return Scaffold(appBar: AppBar(),
+    return Scaffold(
+      backgroundColor: MyColorConst().backgroundColor,
+      appBar: const CommonAppBarUser(clr: true, title1: 'Reviews'),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance.collection("Review").snapshots(),
         builder: (context, snapshot) {
@@ -30,24 +34,79 @@ class RevViewUser extends StatelessWidget {
             return const Text("No Data");
           } else if (snapshot.hasData) {
             final data = snapshot.data!.docs;
-            return ListView.builder(itemCount: data.length,itemBuilder: (context, index) {
-              Card(elevation: 10,margin: EdgeInsets.only(top: ht*.01,right: wt*.05,left: wt*.05),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-                child: Padding(
-                  padding:  EdgeInsets.all(wt*.03),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,children: [
-                   RatingBarIndicator(itemCount: 3,itemBuilder:(context, index) {
-                     return const Icon(Icons.star,color: Colors.amber,);
-                   }, ),
+            return Padding(
+              padding: EdgeInsets.only(top: ht * .03),
+              child: ListView.builder(
+                itemCount: snapshot.data!.docs.length,
+                itemBuilder: (context, index) {
 
-                    SizedBox(height: ht*.01,),
-                    Expanded(child: Text(" '' ${data[index].data()["review"]} '' ",style: MyTextStyle().cmplnttxt2,overflow: TextOverflow.visible)),
-                  ]),
-                ),
-              );
-            },);
+                  return Card(
+                    elevation: 0,
+                    margin: EdgeInsets.only(
+                        left: wt * .1, bottom: ht * .05, right: wt * .1),
+                    child: Padding(
+                      padding: EdgeInsets.only(top: ht * .02, left: wt * .05),
+                      child: SizedBox(
+                        height:  ht * .3,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            StreamBuilder(
+                              stream: FirebaseFirestore.instance
+                                  .collection("Users")
+                                  .where("Id" "==" "${data[index]["userid"]}")
+                                  .snapshots(),
+                              builder: (context, snapshot) {
+                                if (!snapshot.hasData && snapshot.hasError) {
+                                  return const Text("error");
+                                } else if (snapshot.hasData) {
+                                  return Row(
+                                    children: [
+                                      SizedBox(
+                                          width: wt * .2,
+                                          child: Text(
+                                              snapshot.data!.docs[0]["Name"],style: MyTextStyle().cmplnttxt,)),
+                                      Text(snapshot.data!.docs[0]["E mail"],style: MyTextStyle().cmplnttxt,),
+                                    ],
+                                  );
+                                } else {
+                                  return const Text("has error");
+                                }
+                              },
+                            ),
+                            SizedBox(
+                              height: ht * .02,
+                            ),
+                            RatingBarIndicator(
+                              unratedColor: MyColorConst().unRatedColor,
+                              itemBuilder: (context, index) {
+                                return Icon(
+                                  Icons.star,
+                                  color: MyColorConst().ratingColor,
+                                );
+                              },
+                              itemCount: 5,
+                              itemSize: 25,
+                              rating: data[index]["rating"],
+                            ),
+                            SizedBox(
+                              height: ht * .02,
+                            ),
+                            Expanded(
+                              child: SizedBox(
+                                height: ht * .1,
+                                child: Text("'${data[index]["review"]}'",style: MyTextStyle().cmplnttxt2),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            );
           } else {
             return const Text("error");
           }

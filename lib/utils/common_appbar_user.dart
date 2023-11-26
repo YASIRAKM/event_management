@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eventmanagement/constants/color_constants.dart';
 import 'package:eventmanagement/constants/text_style_constant.dart';
 import 'package:eventmanagement/login_controller.dart';
+import 'package:eventmanagement/main.dart';
 import 'package:eventmanagement/user/controller/userid_controller.dart';
 import 'package:eventmanagement/utils/new_container_button.dart';
 import 'package:eventmanagement/utils/new_txtfield.dart';
@@ -14,6 +15,7 @@ import 'package:provider/provider.dart';
 import 'package:eventmanagement/user/controller/value_changing_controller.dart';
 
 import 'package:eventmanagement/user/view/review_view_user.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 
@@ -22,18 +24,20 @@ import 'package:eventmanagement/user/view/review_view_user.dart';
 class CommonAppBarUser extends StatelessWidget implements PreferredSizeWidget {
   final String title1;
   final bool clr;
-  final VoidCallback onPress;
+  // final VoidCallback onPress;
 
   const CommonAppBarUser(
       {super.key,
       required this.title1,
       required this.clr,
-      required this.onPress});
+      // required this.onPress
+      });
 
   @override
   Widget build(BuildContext context) {
-    final controller = Provider.of<ValueChanger>(context);
+    final controller = Provider.of<UserBasicController>(context);
     final userIdController = Provider.of<UserIdController>(context);
+    final logoutController = Provider.of<LoginController>(context);
     final TextEditingController reviewController = TextEditingController();
     final ht =MediaQuery.sizeOf(context).height;
     final wt =MediaQuery.sizeOf(context).width;
@@ -58,7 +62,14 @@ class CommonAppBarUser extends StatelessWidget implements PreferredSizeWidget {
             return [
               PopupMenuItem(
                   child: TextButton(
-                onPressed: onPress, child: const Text("Logout"),
+                onPressed: ()async{
+                  final sh = await SharedPreferences.getInstance();
+                  sh.setBool("log", false);
+                  logoutController.logout();
+
+                  Navigator.pushReplacement(
+                      context, MaterialPageRoute(builder: (_) => const MyHomePage()));
+                }, child: const Text("Logout"),
                 //    ()async{
                 //    logouController.logout();
                 //    // Logincntrlr().logout();
@@ -77,14 +88,14 @@ class CommonAppBarUser extends StatelessWidget implements PreferredSizeWidget {
                                 RatingBar.builder(
                                   allowHalfRating: true,
                                   itemBuilder: (context, index) {
-                                    return const Icon(
+                                    return  Icon(
                                       Icons.star,
-                                      color: Colors.amber,
+                                      color: MyColorConst().ratingColor,
                                     );
                                   },
                                   onRatingUpdate: (value) {
                                     controller.updateRate(value);
-                                  },
+                                  },itemSize: 25,unratedColor: MyColorConst().unRatedColor,
                                 ),
                                 TxtField(
                                     title: 'Review',

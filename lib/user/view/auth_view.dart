@@ -1,6 +1,7 @@
 
 import 'package:eventmanagement/constants/color_constants.dart';
 import 'package:eventmanagement/constants/text_style_constant.dart';
+import 'package:eventmanagement/user/controller/value_changing_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -8,8 +9,8 @@ import 'package:provider/provider.dart';
 import '../../main.dart';
 import '../../utils/common_appbar_admin.dart';
 import '../../utils/new_container_button.dart';
-import '../../utils/new_txtfield_with_preffixicon.dart';
-import '../controller/bool_controller.dart';
+import '../../utils/new_textfield_with_preffixicon.dart';
+
 import '../controller/popup_menu_controller.dart';
 import '../controller/user_controller_user.dart';
 import '../model/popup_menu_model.dart';
@@ -23,6 +24,8 @@ class UserAuthenticationView extends StatelessWidget {
  final   TextEditingController stateController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
  final  TextEditingController password1Controller = TextEditingController();
+
+  UserAuthenticationView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +49,7 @@ class UserAuthenticationView extends StatelessWidget {
               ],
             ),
           ),
-          Consumer4<UserController, BooController, PopUpMenuController,
+          Consumer4<UserController, UserBasicController, PopUpMenuController,
                   SelectedState>(
               builder: (context, userController, booController,
                   dropdownController, selectedState, child) {

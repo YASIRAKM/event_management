@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 
-class ValueChanger extends ChangeNotifier {
+import '../model/bool_model.dart';
+
+class UserBasicController extends ChangeNotifier {
   int _current = 0;
   int get current => _current;
   num _rate =0;
@@ -14,5 +16,14 @@ class ValueChanger extends ChangeNotifier {
     _rate =rate;
     notifyListeners();
   }
+  final  BoolModel _userModel = BoolModel();
+  bool get isBool => _userModel.isBool;
+
+
+  void setLoggedIn(bool value) {
+    _userModel.isBool = value;
+    notifyListeners();
+  }
+
 }
 

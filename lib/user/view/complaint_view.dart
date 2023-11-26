@@ -14,15 +14,18 @@ import '../../utils/new_row_icon_txt.dart';
 import 'auth_view.dart';
 
 class ComplaintView extends StatelessWidget{
+  const ComplaintView({super.key});
 
-  TextEditingController subjController = TextEditingController();
-  TextEditingController contentController = TextEditingController();
-  late String name;
-  late String mail;
+
+
 
 
   @override
   Widget build(BuildContext context) {
+   final  TextEditingController subjController = TextEditingController();
+   final  TextEditingController contentController = TextEditingController();
+    late String name;
+    late String mail;
     final ht = MediaQuery.sizeOf(context).height;
     final wt = MediaQuery.sizeOf(context).width;
 
@@ -43,7 +46,7 @@ class ComplaintView extends StatelessWidget{
                   return StreamBuilder(
                       stream: FirebaseFirestore.instance
                           .collection("Users")
-                          .where("Id" "==" "${userController.getSharedValue("userid")}"  )
+                          .where("Id" "==" "${userController.id}"  )
                           .snapshots(),
                       builder: (context, snapshot) {
                         Map<String, dynamic> data =

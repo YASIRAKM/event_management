@@ -12,38 +12,37 @@ class ServiceSelectController with ChangeNotifier {
   var chkBox2 = [];
   DateFormat dtFormat = DateFormat('dd-MM-yyyy');
 
-  Future<void> fetchEventData(uid) async {
-    try {
-      var snapshot =
-          await FirebaseFirestore.instance.collection("Event").doc(uid).get();
-      if (snapshot.exists) {
-        mapData = snapshot.data();
-        notifyListeners();
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  // Future<void> fetchserviceData() async {
+  // Future<void> fetchEventData(uid) async {
   //   try {
   //     var snapshot =
-  //         await FirebaseFirestore.instance.collection("Services").get();
-  //     if (snapshot.docs.isNotEmpty) {
-  //       chkbxl1 = snapshot.docs
-  //           .map((doc) => serviceModel(
-  //               uid: doc.id,
-  //               title: doc["Service"],
-  //               imageUrl: doc["URL"],
-  //               price: doc["Price"]))
-  //           .toList();
-  //
+  //         await FirebaseFirestore.instance.collection("Event").doc(uid).get();
+  //     if (snapshot.exists) {
+  //       mapData = snapshot.data();
   //       notifyListeners();
   //     }
   //   } catch (e) {
   //     print(e);
   //   }
   // }
+  late num total ;
+
+  void calculateTotal(
+      Map<String, dynamic> events
+      , List<dynamic> listOfMaps) {
+    try{
+      num totalSum =num.parse(events["price"]);
+      for (var map in listOfMaps) {
+        totalSum += map["Price"];
+      }
+      total = totalSum;}
+    catch(e){
+      print(e);
+
+    }
+    notifyListeners();
+  }
+
+
 
   void toggleSelect(l2) async {
     if (chkBox2.contains(l2)) {

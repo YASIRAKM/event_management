@@ -12,6 +12,8 @@ class UserCView extends StatelessWidget {
   final TextEditingController _dist = TextEditingController();
   final TextEditingController _state = TextEditingController();
 
+  UserCView({super.key});
+
   @override
   Widget build(BuildContext context) {
     final ht =MediaQuery.sizeOf(context).height;
@@ -22,7 +24,7 @@ class UserCView extends StatelessWidget {
 
       body: StreamBuilder(
         stream:FirebaseFirestore.instance.collection("Users")
-            .where("Id" "==" "${idController.getSharedValue("userid").toString()}").snapshots(),
+            .where("Id" "==" "${idController.id.toString()}").snapshots(),
         builder: (context, snapshot) {
           var data = snapshot.data!.docs[0];
           Map<String, dynamic> dat= data.data();

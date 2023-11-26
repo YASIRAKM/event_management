@@ -21,7 +21,7 @@ class Event extends StatelessWidget {
       floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
       floatingActionButton: FloatingActionButton(
           elevation: 10,
-          backgroundColor: MyColorConst().Card1,
+          backgroundColor: MyColorConst().card1,
           shape: const CircleBorder(side: BorderSide.none),
           child: const Icon(FontAwesomeIcons.plus, color: MyColorConst.color1),
           onPressed: () {

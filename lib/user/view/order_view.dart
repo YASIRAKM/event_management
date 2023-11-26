@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
-import '../controller/checkout_controller.dart';
+
 import 'checkout_page.dart';
-import 'order_detailed_view.dart';
+
 
 class OrderView extends StatelessWidget {
   const OrderView({super.key});
@@ -26,7 +26,7 @@ class OrderView extends StatelessWidget {
               .collection("Booking")
               .where("userid"
                   "=="
-                  "${userIdController.getSharedValue("userid").toString()}")
+                  "${userIdController.id.toString()}")
               .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -88,11 +88,14 @@ class OrderView extends StatelessWidget {
                                   height: ht * .15,
                                   child: Padding(
                                     padding: EdgeInsets.only(top: ht * .03),
-                                    child: Column(
+                                    child: Column(crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                          events["Title"],
-                                          style: MyTextStyle().txtstyle4,
+                                        Padding(
+                                          padding:  EdgeInsets.only(left: wt*.05),
+                                          child: Text(
+                                            events["Title"],
+                                            style: MyTextStyle().txtstyle4,
+                                          ),
                                         ),
                                         SizedBox(
                                           height: ht * .02,

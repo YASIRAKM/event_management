@@ -54,6 +54,8 @@ dependencies:
   curved_navigation_bar: ^1.0.3
   intl: ^0.18.1
   image_loader: ^1.2.0
+  google_sign_in: ^6.1.6
+  flutter_facebook_auth: ^6.0.3
 
 dev_dependencies:
   flutter_test:

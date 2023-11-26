@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../utils/common_appbar_user.dart';
 import '../../main.dart';
 
+import '../controller/userid_controller.dart';
 import 'complaint_view.dart';
 import 'new_sub_home.dart';
 import 'order_view.dart';
@@ -40,26 +41,19 @@ class _UserHomeViewState extends State<UserHomeView>
     final ht = MediaQuery.sizeOf(context).height;
     final wt = MediaQuery.sizeOf(context).width;
     List<Widget> pages = [
-      UserCView(),
-      SubHome(),
+       UserCView(),
+      const SubHome(),
      const OrderView(),
-      ComplaintView(),
+      const ComplaintView(),
     ];
-    final logoutController = Provider.of<LoginController>(context);
+    final userid = Provider.of<UserIdController>(context,listen: false);
+    userid.getSharedValue();
     return Scaffold(
       extendBody: true,
       extendBodyBehindAppBar: true,
-      appBar: CommonAppBarUser(
+      appBar: const CommonAppBarUser(
         title1: 'Event Management',
         clr: true,
-        onPress: () async {
-          final sh = await SharedPreferences.getInstance();
-          sh.setBool("log", false);
-          logoutController.logout();
-
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (_) => const MyHomePage()));
-        },
       ),
       body: PageView(controller: _pageController, children: pages),
       floatingActionButton: FloatingActionButton(

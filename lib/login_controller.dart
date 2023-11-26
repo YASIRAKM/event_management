@@ -1,6 +1,8 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'admin/view/admin_home_view.dart';
 import 'login_model.dart';
@@ -12,6 +14,7 @@ class LoginController extends ChangeNotifier {
   late UserModel user;
   late  String id ;
   // final GoogleSignIn _googleSignIn = GoogleSignIn();
+
 
   Future autoLogin(BuildContext context)async{
     final sh = await SharedPreferences.getInstance();
@@ -51,8 +54,41 @@ class LoginController extends ChangeNotifier {
     pref.setBool("log", false);
     notifyListeners();
   }
-  googleSignup()async{
-    await FirebaseAuth.instance.signInWithProvider(GoogleAuthProvider());
+  Future<UserCredential?> signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount? googleSignInAccount =
+      await GoogleSignIn().signIn();
+
+      if (googleSignInAccount != null) {
+        final GoogleSignInAuthentication googleSignInAuthentication =
+        await googleSignInAccount.authentication;
+
+        final AuthCredential credential = GoogleAuthProvider.credential(
+          accessToken: googleSignInAuthentication.accessToken,
+          idToken: googleSignInAuthentication.idToken,
+        );
+
+        return await FirebaseAuth.instance.signInWithCredential(credential);
+      }
+    } catch (e) {
+      print(e);
+      return null;
+    }
+    notifyListeners();
+  }
+  Future<UserCredential?> signInWithFacebook() async {
+    try {
+      final LoginResult loginResult = await FacebookAuth.instance.login();
+      if (loginResult.status == LoginStatus.success) {
+        final AuthCredential facebookCredential =
+        FacebookAuthProvider.credential(loginResult.accessToken!.token);
+        return await FirebaseAuth.instance.signInWithCredential(facebookCredential);
+      }
+    } catch (e) {
+      print('Error signing in with Facebook: $e');
+      return null;
+    }
+    notifyListeners();
   }
 }
 

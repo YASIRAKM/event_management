@@ -1,9 +1,12 @@
 import 'package:eventmanagement/admin/view/Users/users_view.dart';
+import 'package:eventmanagement/admin/view/review_view.dart';
 import 'package:eventmanagement/constants/text_style_constant.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../main.dart';
 import '../../utils/common_appbar_admin.dart';
 import '../../constants/color_constants.dart';
 import 'complaint_view_admin.dart';
@@ -124,6 +127,25 @@ class Drawers extends StatelessWidget {
           title: 'Profile',
           route: AdminProfile(),
         ),
+        const Divider(
+          thickness: .5,
+        ),
+        const NewWidget(
+          icos: Icons.rate_review,
+          title: 'Reviews',
+          route: ReviewViewAdmin(),
+
+        ),
+        Padding(
+          padding:  EdgeInsets.only(left: wt * .05, right: wt * .1),
+          child: Row(children: [const Icon(Icons.logout,color: MyColorConst.color1, ), TextButton(onPressed: ()async{
+            final navigator = Navigator.of(context);
+            await FirebaseAuth.instance.signOut();
+            navigator.pushReplacement(MaterialPageRoute(builder: (_)=>const MyHomePage()));
+
+
+          }, child: Text("Logout",style: MyTextStyle().drawerText,))],),
+        )
       ]),
     );
   }

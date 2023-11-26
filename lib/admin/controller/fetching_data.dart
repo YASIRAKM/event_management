@@ -9,10 +9,8 @@ class FetchDataAdmin extends ChangeNotifier {
       StreamController<List<Map<String, dynamic>>>.broadcast();
   final StreamController<Map<String, dynamic>> _dataController2 =
       StreamController<Map<String, dynamic>>.broadcast();
-
   Stream<List<Map<String, dynamic>>> get dataStream => _dataController.stream;
   Stream<Map<String, dynamic>> get dataStream2 => _dataController2.stream;
-
   void fetchDataWithOutDoc(String collectionName) {
     FirebaseFirestore.instance.collection(collectionName).snapshots().listen(
         (snapshot) {

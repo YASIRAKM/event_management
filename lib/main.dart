@@ -9,6 +9,7 @@ import 'package:eventmanagement/utils/new_container_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
@@ -22,8 +23,8 @@ import 'admin/controller/fetching_data.dart';
 import 'admin/view/admin_home_view.dart';
 import 'firebase_options.dart';
 import 'login_controller.dart';
-import 'user/controller/bool_controller.dart';
-import 'user/controller/checkout_controller.dart';
+
+
 import 'user/controller/servie_select_controller.dart';
 import 'user/controller/user_controller_user.dart';
 import 'user/controller/user_home_controller.dart';
@@ -41,12 +42,11 @@ void main() async {
     ChangeNotifierProvider(create: (context) => UserIdController()),
     ChangeNotifierProvider(create: (context) => UserController()),
     ChangeNotifierProvider(create: (context) => ServiceSelectController()),
-    ChangeNotifierProvider(create: (context) => BooController()),
-    ChangeNotifierProvider(create: (context) => ValueChanger()),
+    ChangeNotifierProvider(create: (context) => UserBasicController()),
     ChangeNotifierProvider(create: (context) => PopUpMenuController()),
     ChangeNotifierProvider(create: (context) => SelectedState()),
     ChangeNotifierProvider(create: (context) => EventController()),
-    ChangeNotifierProvider(create: (context) => CheckOutController()),
+
   ], child: const MyApp()));
 }
 
@@ -107,7 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   EdgeInsets.only(top: ht * .35, left: wt * .1, right: wt * .1),
               child: Form(
                   key: formK,
-                  child: Consumer2<LoginController, BooController>(
+                  child: Consumer2<LoginController, UserBasicController>(
                       builder: (context, controller, controller2, child) {
                     return ListView(
                       children: [
@@ -166,6 +166,8 @@ class _MyHomePageState extends State<MyHomePage> {
                               if (formK.currentState!.validate()) {
                                 controller.login(context);
                               }
+                              controller.emailController.clear();
+                              controller.passwordController.clear();
                             },
                             txtstyle:const TextStyle(color: MyColorConst.color1),
                           ),
@@ -206,9 +208,21 @@ class _MyHomePageState extends State<MyHomePage> {
                                           topLeft: Radius.circular(ht * .02),
                                           bottomRight:
                                               Radius.circular(ht * .02))),
-                                  child:const Icon(
-                                    FontAwesomeIcons.google,
-                                    color: MyColorConst.color1,
+                                  child:IconButton(onPressed: ()async{
+                                    UserCredential? userCredential = await controller.signInWithGoogle();
+
+                                    if (userCredential != null) {
+                                      User user = userCredential.user!;
+                                      print('User ID: ${user.uid}');
+                                    } else {
+                                      // Sign in failed
+                                      print('Sign in with Google failed.');
+                                    }
+                                  },
+                                    icon: const Icon(
+                                      FontAwesomeIcons.google,
+                                      color: MyColorConst.color1,
+                                    ),
                                   )),
                               const Text(
                                 'or',
@@ -227,9 +241,20 @@ class _MyHomePageState extends State<MyHomePage> {
                                           topLeft: Radius.circular(ht * .02),
                                           bottomRight:
                                               Radius.circular(ht * .02))),
-                                  child: const Icon(
-                                    FontAwesomeIcons.facebook,
-                                    color: MyColorConst.color1,
+                                  child: IconButton( onPressed: ()async {
+                                    UserCredential? userCredential = await controller.signInWithFacebook();
+
+                                    if (userCredential != null) {
+                                      Fluttertoast.showToast(msg: 'Facebook Sign-In Successful: ${userCredential.user!.displayName}',gravity: ToastGravity.CENTER);
+
+                                    } else {
+                                      Fluttertoast.showToast(msg:'Facebook Sign-In Failed' ,gravity: ToastGravity.CENTER);
+                                    }
+                                  },
+                                    icon: const Icon(
+                                      FontAwesomeIcons.facebook,
+                                      color: MyColorConst.color1,
+                                    ),
                                   )),
                             ],
                           ),

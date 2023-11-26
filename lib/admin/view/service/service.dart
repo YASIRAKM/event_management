@@ -24,7 +24,7 @@ class Service extends StatelessWidget {
     return Scaffold(floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(shape: const CircleBorder(),onPressed: (){
         Navigator.push(context,MaterialPageRoute(builder: (_)=>AddService()));
-      },backgroundColor: MyColorConst().Card1,child: const Icon(FontAwesomeIcons.plus,color: MyColorConst.color1,)),
+      },backgroundColor: MyColorConst().card1,child: const Icon(FontAwesomeIcons.plus,color: MyColorConst.color1,)),
       appBar:const CommonAppbar(txt: 'Services', drawericon: Icons.menu, clrs: MyColorConst.color1),drawer:const  Drawers(),
       body:
       Padding(
