@@ -16,6 +16,8 @@ import '../controller/value_changing_controller.dart';
 import 'service_select.dart';
 
 class UsereventSelect extends StatelessWidget {
+  const UsereventSelect({super.key});
+
   @override
   Widget build(BuildContext context) {
     final ht = MediaQuery.sizeOf(context).height;
@@ -31,10 +33,12 @@ class UsereventSelect extends StatelessWidget {
       body: StreamBuilder(
           stream: FirebaseFirestore.instance.collection("Event").snapshots(),
           builder: (context, snapshot) {
-            return Consumer2<EventController, UserBasicController>(
-              builder: (context, eventController, valueChanger, _) {
-                if (eventController.events.isEmpty) {
-                  eventController.fetchEvents();
+            if(snapshot.connectionState==ConnectionState.waiting){
+              return const Center(child: CircularProgressIndicator(),);
+            }
+            return Consumer< UserBasicController>(
+              builder: (context, valueChanger, _) {
+                if (snapshot.hasError) {
                   return const  Center(
                     child:CircularProgressIndicator(),
                   );
@@ -207,6 +211,7 @@ class UsereventSelect extends StatelessWidget {
                 }
               },
             );
+
           }),
     );
   }

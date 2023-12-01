@@ -21,15 +21,6 @@ class SubHome extends StatelessWidget {
         child: StreamBuilder(
           stream: FirebaseFirestore.instance.collection("Event").snapshots(),
           builder: (context, snapshot) {
-            List<String> imageUrls = [];
-            for (QueryDocumentSnapshot<Map<String, dynamic>> document
-                in snapshot.data!.docs) {
-              List<dynamic>? documentImageUrls = document['URLlist'];
-              if (documentImageUrls != null && documentImageUrls.isNotEmpty) {
-                imageUrls.add(documentImageUrls[0]);
-              }
-            }
-
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(
                 child: CircularProgressIndicator(),
@@ -43,6 +34,14 @@ class SubHome extends StatelessWidget {
                 child: Text("Has No Data "),
               );
             } else if (snapshot.hasData) {
+              List<String> imageUrls = [];
+              for (QueryDocumentSnapshot<Map<String, dynamic>> document
+              in snapshot.data!.docs) {
+                List<dynamic>? documentImageUrls = document['URLlist'];
+                if (documentImageUrls != null && documentImageUrls.isNotEmpty) {
+                  imageUrls.add(documentImageUrls[0]);
+                }
+              }
               return Stack(
                 children: [
                   // Text("Welcome :"),

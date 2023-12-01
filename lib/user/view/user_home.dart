@@ -37,9 +37,9 @@ class _UserHomeViewState extends State<UserHomeView>
 
   @override
   Widget build(BuildContext context) {
-    final controlLer = Provider.of<LoginController>(context);
+    // final controlLer = Provider.of<LoginController>(context);
     final ht = MediaQuery.sizeOf(context).height;
-    final wt = MediaQuery.sizeOf(context).width;
+    // final wt = MediaQuery.sizeOf(context).width;
     List<Widget> pages = [
        UserCView(),
       const SubHome(),

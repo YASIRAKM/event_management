@@ -23,7 +23,7 @@ class FetchDataAdmin extends ChangeNotifier {
           .toList();
       _dataController.add(data);
     }, onError: (error) {
-      // Handle error
+
       print('Error fetching data: $error');
     });
     notifyListeners();
@@ -41,7 +41,7 @@ class FetchDataAdmin extends ChangeNotifier {
         _dataController.addError('Document not found');
       }
     }, onError: (error) {
-      // Handle error
+
       print('Error fetching data: $error');
       _dataController.addError(error.toString());
     });
@@ -59,7 +59,7 @@ class FetchDataAdmin extends ChangeNotifier {
               .toList();
           _dataController.add(data);
         }, onError: (error) {
-      // Handle error
+
       print('Error fetching data: $error');
     });
     notifyListeners();

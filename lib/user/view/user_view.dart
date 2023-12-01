@@ -26,13 +26,14 @@ class UserCView extends StatelessWidget {
         stream:FirebaseFirestore.instance.collection("Users")
             .where("Id" "==" "${idController.id.toString()}").snapshots(),
         builder: (context, snapshot) {
-          var data = snapshot.data!.docs[0];
-          Map<String, dynamic> dat= data.data();
+
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return const Text("Error");
           } else {
+            var data = snapshot.data!.docs[0];
+            Map<String, dynamic> dat= data.data();
             return Padding(
               padding: EdgeInsets.only(left:wt*.05,right: wt*.05,top: ht*.01 ),
               child: ListView(

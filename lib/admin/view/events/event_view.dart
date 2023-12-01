@@ -30,7 +30,7 @@ class EventView extends StatelessWidget {
           txt: 'Event', drawericon: Icons.menu, clrs: MyColorConst.color1),
       body: StreamBuilder(
         stream: fetchData.dataStream,
-        // FirebaseFirestore.instance.collection("Event").snapshots(),
+
         builder: (BuildContext context, snapshot) {
 
           if (snapshot.connectionState == ConnectionState.waiting) {

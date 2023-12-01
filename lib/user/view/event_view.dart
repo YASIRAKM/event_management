@@ -57,40 +57,50 @@ class ServiceSelectUser extends StatelessWidget {
                         .doc(uid)
                         .snapshots(),
                     builder: (context, snapshot) {
-                      mapData = snapshot.data!.data() as Map<String, dynamic>;
-
-                      return Padding(
-                        padding: EdgeInsets.only(left: wt * .01),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Event you booked : ",
-                                style: MyTextStyle().txtstyle4),
-                            Padding(
-                              padding: EdgeInsets.only(top: ht * .02),
-                              child: Column(
-                                children: [
-                                  NewRowICOnTxtWidget(
-                                    w: wt,
-                                    ics: Icons.event,
-                                    txt: snapshot.data!["Title"],
-                                    clr: MyColorConst().cardTXT,
-                                    txtstl: MyTextStyle().imgetitle,
-                                    h: ht * .05,
-                                  ),
-                                  NewRowICOnTxtWidget(
+                      if(snapshot.connectionState==ConnectionState.waiting){
+                        return const Center(child: CircularProgressIndicator(),);
+                      }
+                      if(snapshot.hasError){
+                        return  const Text("has error");
+                      }
+                      if(snapshot.hasData) {
+                        mapData = snapshot.data!.data() as Map<String, dynamic>;
+                        return Padding(
+                          padding: EdgeInsets.only(left: wt * .01),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Event you booked : ",
+                                  style: MyTextStyle().txtstyle4),
+                              Padding(
+                                padding: EdgeInsets.only(top: ht * .02),
+                                child: Column(
+                                  children: [
+                                    NewRowICOnTxtWidget(
                                       w: wt,
-                                      h: ht * .05,
-                                      ics: FontAwesomeIcons.indianRupeeSign,
-                                      txt: snapshot.data!["price"],
+                                      ics: Icons.event,
+                                      txt: snapshot.data!["Title"],
                                       clr: MyColorConst().cardTXT,
-                                      txtstl: MyTextStyle().imgetitle),
-                                ],
+                                      txtstl: MyTextStyle().imgetitle,
+                                      h: ht * .05,
+                                    ),
+                                    NewRowICOnTxtWidget(
+                                        w: wt,
+                                        h: ht * .05,
+                                        ics: FontAwesomeIcons.indianRupeeSign,
+                                        txt: snapshot.data!["price"],
+                                        clr: MyColorConst().cardTXT,
+                                        txtstl: MyTextStyle().imgetitle),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      );
+                            ],
+                          ),
+                        );
+                      }
+                      else{
+                        return const  Center(child: Text("error"),);
+                      }
                     },
                   ),
                   Padding(

@@ -1,28 +1,26 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eventmanagement/utils//common_appbar_admin.dart';
-import 'package:eventmanagement/admin/view/booked_view/booked_view.dart';
 import 'package:eventmanagement/constants/color_constants.dart';
 import 'package:eventmanagement/constants/text_style_constant.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-
 import '../../../utils/new_row_icon_txt.dart';
 import '../../controller/fetching_data.dart';
 
 class BookedEvent extends StatelessWidget {
-  final String docid;
+  final String docId;
 
-  const BookedEvent({super.key, required this.docid});
+  const BookedEvent({super.key, required this.docId});
 
   @override
   Widget build(BuildContext context) {
     final ht = MediaQuery.sizeOf(context).height;
     final wt = MediaQuery.sizeOf(context).width;
     final FetchDataAdmin fetchData = Provider.of<FetchDataAdmin>(context);
-    fetchData.fetchDataWithDocument("Booking", docid);
+    fetchData.fetchDataWithDocument("Booking", docId);
     return Scaffold(
         appBar: const CommonAppbar(
             txt: 'Booked',
@@ -38,10 +36,6 @@ class BookedEvent extends StatelessWidget {
                 bottom: ht * .1),
             child: StreamBuilder(
               stream: fetchData.dataStream2,
-              // FirebaseFirestore.instance
-              //     .collection("Booking")
-              //     .doc(docid)
-              //     .snapshots(),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(
@@ -53,9 +47,7 @@ class BookedEvent extends StatelessWidget {
                   return const Text("no data");
                 } else if (snapshot.hasData) {
                   Map<String, dynamic> events = snapshot.data["event"];
-                  // List<Map<String, dynamic>> mapList = snapshot.data!.map((DocumentSnapshot document) {
-                  //   return document.data() as Map<String, dynamic>;
-                  // }).toList();
+
                   List services = snapshot.data["services"];
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -205,7 +197,6 @@ class BookedEvent extends StatelessWidget {
                 } else {
                   return const Text("error");
                 }
-                // return Container(decoration: BoxDecoration(image: DecorationImage(image: NetworkImage(events["URL"]))),);
               },
             ),
           ),

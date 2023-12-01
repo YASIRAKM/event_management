@@ -1,8 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:eventmanagement/utils/common_appbar_admin.dart';
 import 'package:eventmanagement/constants/color_constants.dart';
 import 'package:eventmanagement/constants/text_style_constant.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
@@ -29,7 +28,6 @@ class BookedView extends StatelessWidget {
       drawer: const  Drawers(),
       body: StreamBuilder(
         stream:fetchData.dataStream,
-        // FirebaseFirestore.instance.collection("Booking").snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Lottie.asset("asset/lottie/Animation - 1698750195337.json");
@@ -45,7 +43,7 @@ class BookedView extends StatelessWidget {
                   itemBuilder: (context, index) {
                     Map<String, dynamic> events =
                         snapshot.data![index]["event"];
-                    // List<Map<String , dynamic>> services = snapshot.data!.docs[index].data()["services"];
+
                     return Container(
                       decoration: const BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(20))),
@@ -118,7 +116,7 @@ class BookedView extends StatelessWidget {
                                                     MaterialPageRoute(
                                                         builder: (_) =>
                                                             BookedEvent(
-                                                              docid: snapshot
+                                                              docId: snapshot
                                                                   .data!
                                                                   [index]
                                                                   ['id'],
@@ -137,20 +135,13 @@ class BookedView extends StatelessWidget {
                                               )),
                                         ],
                                       ),
-                                      // Text(snapshot.data!.docs[index].data()["Place"]),
-                                      // Text(snapshot.data!.docs[index].data()["date"]),
+
                                     ],
                                   ),
                                 ),
                               ),
                             ),
 
-                            // GridView.builder(gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3), itemBuilder: (context, index) {
-                            //   return Container(child: Column(children: [
-                            //     Text(services[index]["Service"]),
-                            //     Image(image: NetworkImage(services[index]["Service"])),
-                            //   ]),);
-                            // },itemCount: services.length,)
                           ],
                         ),
                       ),

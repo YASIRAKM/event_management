@@ -20,7 +20,7 @@ class AdminDashView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // DateTime   Dates = DateTime.now();
+
     String format =DateFormat("dd-MM-yyyy").format(DateTime.now());
     final ht = MediaQuery.sizeOf(context).height;
     final wt = MediaQuery.sizeOf(context).width;

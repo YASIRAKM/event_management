@@ -45,7 +45,7 @@ void main() async {
     ChangeNotifierProvider(create: (context) => UserBasicController()),
     ChangeNotifierProvider(create: (context) => PopUpMenuController()),
     ChangeNotifierProvider(create: (context) => SelectedState()),
-    ChangeNotifierProvider(create: (context) => EventController()),
+    // ChangeNotifierProvider(create: (context) => EventController()),
 
   ], child: const MyApp()));
 }

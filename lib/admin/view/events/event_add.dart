@@ -22,9 +22,11 @@ import '../admin_home_view.dart';
 
 class EventAdd extends StatelessWidget {
 
-  TextEditingController titleController = TextEditingController();
-  TextEditingController descriptionController = TextEditingController();
-  TextEditingController priceController = TextEditingController();
+ final  TextEditingController titleController = TextEditingController();
+ final TextEditingController descriptionController = TextEditingController();
+ final  TextEditingController priceController = TextEditingController();
+
+  EventAdd({super.key});
 
   @override
   Widget build(BuildContext context) {

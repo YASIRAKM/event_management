@@ -43,67 +43,80 @@ class ServiceSelect extends StatelessWidget {
                       .collection("Services")
                       .snapshots(),
                   builder: (context, snapshot) {
-                    final data = snapshot.data!.docs;
-                    return Padding(
-                      padding: EdgeInsets.only(
-                          top: ht * .01, left: wt * .05, right: wt * .05),
-                      child: Card(
-                        child: SizedBox(
-                          height: ht * .5,
-                          width: wt,
-                          child: ListView.builder(
-                            itemBuilder: (context, index) {
-                              serviceSelect.chkBox1
-                                  .add(snapshot.data!.docs[index].data());
-                              bool isSelected = serviceSelect.chkBox2
-                                  .contains(serviceSelect.chkBox1[index]);
-                              return Padding(
-                                padding: EdgeInsets.only(
-                                    top: ht * .01,
-                                    left: wt * .01,
-                                    right: wt * .01),
-                                child: Container(
-                                  width: wt * .6,
-                                  decoration: BoxDecoration(
-                                      shape: BoxShape.rectangle,
-                                      borderRadius: BorderRadius.circular(2),
-                                      border: Border.all(color: Colors.black)),
-                                  child: ListTile(
-                                    shape: LinearBorder.start(
-                                        side: const BorderSide(width: 2)),
-                                    leading: Container(
-                                      decoration: BoxDecoration(
-                                          border:
-                                              Border.all(color: Colors.black)),
-                                      height: ht * .1,
-                                      width: wt * .2,
-                                      child: Padding(
-                                        padding: EdgeInsets.all(ht * .002),
-                                        child: Image.network(data[index]["URL"],
-                                            fit: BoxFit.cover),
+                    if(snapshot.connectionState==ConnectionState.waiting){
+                      return const Center(child: CircularProgressIndicator(),);
+                    }
+                    if(snapshot.hasError){
+                      return  const Text("has error");
+                    }
+                    if(snapshot.hasData) {
+                      final data = snapshot.data!.docs;
+                      return Padding(
+                        padding: EdgeInsets.only(
+                            top: ht * .01, left: wt * .05, right: wt * .05),
+                        child: Card(
+                          child: SizedBox(
+                            height: ht * .5,
+                            width: wt,
+                            child: ListView.builder(
+                              itemBuilder: (context, index) {
+                                serviceSelect.chkBox1
+                                    .add(snapshot.data!.docs[index].data());
+                                bool isSelected = serviceSelect.chkBox2
+                                    .contains(serviceSelect.chkBox1[index]);
+                                return Padding(
+                                  padding: EdgeInsets.only(
+                                      top: ht * .01,
+                                      left: wt * .01,
+                                      right: wt * .01),
+                                  child: Container(
+                                    width: wt * .6,
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.rectangle,
+                                        borderRadius: BorderRadius.circular(2),
+                                        border: Border.all(
+                                            color: Colors.black)),
+                                    child: ListTile(
+                                      shape: LinearBorder.start(
+                                          side: const BorderSide(width: 2)),
+                                      leading: Container(
+                                        decoration: BoxDecoration(
+                                            border:
+                                            Border.all(color: Colors.black)),
+                                        height: ht * .1,
+                                        width: wt * .2,
+                                        child: Padding(
+                                          padding: EdgeInsets.all(ht * .002),
+                                          child: Image.network(
+                                              data[index]["URL"],
+                                              fit: BoxFit.cover),
+                                        ),
+                                      ),
+                                      title: Text(data[index]["Service"],
+                                          style: MyTextStyle().txtstyle4),
+                                      subtitle: Text(
+                                          data[index]["Price"].toString(),
+                                          style: MyTextStyle().txtstyle4),
+                                      trailing: Checkbox(
+                                        value: isSelected,
+                                        onChanged: (bool? value) {
+                                          serviceSelect.toggleSelect(
+                                              serviceSelect.chkBox1[index]);
+                                        },
                                       ),
                                     ),
-                                    title: Text(data[index]["Service"],
-                                        style: MyTextStyle().txtstyle4),
-                                    subtitle: Text(
-                                        data[index]["Price"].toString(),
-                                        style: MyTextStyle().txtstyle4),
-                                    trailing: Checkbox(
-                                      value: isSelected,
-                                      onChanged: (bool? value) {
-                                        serviceSelect.toggleSelect(
-                                            serviceSelect.chkBox1[index]);
-                                      },
-                                    ),
                                   ),
-                                ),
-                              );
-                            },
-                            itemCount: snapshot.data!.docs.length,
+                                );
+                              },
+                              itemCount: snapshot.data!.docs.length,
+                            ),
                           ),
                         ),
-                      ),
-                    );
+                      );
+                    }
+                    else{
+                      return const  Center(child: Text("error"));
+                    }
                   },
                 ),
                 Padding(

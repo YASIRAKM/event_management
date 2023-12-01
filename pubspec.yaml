@@ -56,6 +56,7 @@ dependencies:
   image_loader: ^1.2.0
   google_sign_in: ^6.1.6
   flutter_facebook_auth: ^6.0.3
+  flutter_launcher_icons: ^0.11.0
 
 dev_dependencies:
   flutter_test:
